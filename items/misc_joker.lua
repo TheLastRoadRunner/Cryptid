@@ -6189,17 +6189,20 @@ local membershipcard = {
 	blueprint_compat = true,
 	atlas = "atlasthree",
 	loc_vars = function(self, info_queue, card)
-		return { vars = { card.ability.extra.Xmult_mod, card.ability.extra.Xmult_mod * GLOBAL_cry_member_count } }
+		-- HATA DÜZELTME: "or 0" eklendi
+		return { vars = { card.ability.extra.Xmult_mod, card.ability.extra.Xmult_mod * (GLOBAL_cry_member_count or 0) } }
 	end,
 	calculate = function(self, card, context)
-		if context.joker_main and card.ability.extra.Xmult_mod * GLOBAL_cry_member_count > 1 then
+		-- HATA DÜZELTME: "or 0" tüm kullanımlara eklendi
+		local multiplier = card.ability.extra.Xmult_mod * (GLOBAL_cry_member_count or 0)
+		if context.joker_main and multiplier > 1 then
 			return {
 				message = localize({
 					type = "variable",
 					key = "a_xmult",
-					vars = { card.ability.extra.Xmult_mod * GLOBAL_cry_member_count },
+					vars = { multiplier },
 				}),
-				Xmult_mod = card.ability.extra.Xmult_mod * GLOBAL_cry_member_count,
+				Xmult_mod = multiplier,
 			}
 		end
 	end,
